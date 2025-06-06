@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "allowImportingTsExtensions": false,
-    "noEmit": false,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     "composite": false,
     "strict": true,
     "downlevelIteration": true,
@@ -14,14 +14,12 @@
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
     "types": [
-      "node"
+      "bun-types"
     ],
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "outDir": "./dist",
-    "rootDir": "./src",
-    "declaration": false,
-    "sourceMap": false
+    "rootDir": "./src"
   },
   "include": [
     "src/**/*"

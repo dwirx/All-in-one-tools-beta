@@ -5,19 +5,14 @@
       "src": "src/index.ts",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["src/**/*", "public/**/*", "tsconfig.json"]
+        "includeFiles": ["src/**/*.ts", "tsconfig.json"]
       }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/src/index.js"
+      "dest": "/index.js"
     }
-  ],
-  "functions": {
-    "src/index.ts": {
-      "runtime": "nodejs18.x"
-    }
-  }
+  ]
 }

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import type { FileData } from '../types/index';
-import { SUPPORTED_EXTENSIONS } from '../config/app';
+import type { FileData } from '../types/index.js';
+import { SUPPORTED_EXTENSIONS } from '../config/app.js';
 
 export function createFolderIfNotExists(folderPath: string): void {
   if (!fs.existsSync(folderPath)) {

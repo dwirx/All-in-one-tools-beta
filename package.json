@@ -3,14 +3,10 @@
   "version": "1.0.0",
   "description": "All-in-one tools with Bun.js and TypeScript",
   "main": "src/index.ts",
-  "engines": {
-    "node": ">=18.0.0"
-  },
   "scripts": {
     "dev": "bun run --watch src/index.ts",
-    "start": "node dist/index.js",
-    "build": "tsc",
-    "vercel-build": "tsc",
+    "start": "bun run src/index.ts",
+    "build": "bun build src/index.ts --outdir dist --target bun",
     "type-check": "bun tsc --noEmit"
   },
   "keywords": ["bun", "typescript", "express", "tools"],

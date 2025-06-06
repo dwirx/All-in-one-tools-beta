@@ -1,8 +1,8 @@
 import express from 'express';
-import { appConfig } from './config/app';
-import { createFolderIfNotExists } from './utils/fileSystem';
-import { HomeRoutes } from './routes/homeRoutes';
-import { FileRoutes } from './routes/fileRoutes';
+import { appConfig } from './config/app.js';
+import { createFolderIfNotExists } from './utils/fileSystem.js';
+import { HomeRoutes } from './routes/homeRoutes.js';
+import { FileRoutes } from './routes/fileRoutes.js';
 
 export function createApp(): express.Application {
   const app = express();
