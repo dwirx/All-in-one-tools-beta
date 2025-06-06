@@ -1,4 +1,4 @@
-import type { AppConfig } from '../types/index.js';
+import type { AppConfig } from '../types/index';
 
 export const appConfig: AppConfig = {
   port: 3000,

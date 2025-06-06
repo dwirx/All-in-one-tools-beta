@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import path from 'path';
-import { fileExists, readFileContent } from '../utils/fileSystem.js';
-import { MarkdownService } from '../services/markdownService.js';
-import { generateFolderIndexTemplate } from '../templates/htmlTemplate.js';
-import { getFileList } from '../utils/fileSystem.js';
-import type { FolderType } from '../types/index.js';
+import { fileExists, readFileContent } from '../utils/fileSystem';
+import { MarkdownService } from '../services/markdownService';
+import { generateFolderIndexTemplate } from '../templates/htmlTemplate';
+import { getFileList } from '../utils/fileSystem';
+import type { FolderType } from '../types/index';
 
 export class FileRoutes {
   static async serveFileOrRenderMarkdown(folder: string, fileName: string, res: Response): Promise<void> {

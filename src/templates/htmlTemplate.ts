@@ -1,4 +1,4 @@
-import type { FileData, FilterType } from '../types/index.js';
+import type { FileData, FilterType } from '../types/index';
 
 export function getNoFilesMessage(categoryName: string, filesObject: FileData): string {
   if (filesObject.error) {

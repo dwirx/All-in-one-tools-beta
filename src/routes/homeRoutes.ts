@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { getFileList } from '../utils/fileSystem.js';
-import { generateMainTemplate, generateSection } from '../templates/htmlTemplate.js';
-import type { FilterType, FileData } from '../types/index.js';
+import { getFileList } from '../utils/fileSystem';
+import { generateMainTemplate, generateSection } from '../templates/htmlTemplate';
+import type { FilterType, FileData } from '../types/index';
 
 export class HomeRoutes {
   static home(req: Request, res: Response): void {
