@@ -1,14 +1,9 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "src/index.ts",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["src/**/*.ts", "tsconfig.json"]
-      }
-    }
-  ],
+  "buildCommand": "bun run build",
+  "outputDirectory": "dist",
+  "installCommand": "bun install",
+  "devCommand": "bun run dev",
   "routes": [
     {
       "src": "/(.*)",
