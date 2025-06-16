@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enhanced ElevenLabs TTS Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      @keyframes fillAnimation {
+        from {
+          width: 0;
+        }
+        to {
+          width: var(--fill-width);
+        }
+      }
+      .animate-fill {
+        animation: fillAnimation 1s ease-out forwards;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gradient-to-r from-blue-500 to-purple-600 min-h-screen p-4 md:p-8"
+  >
+    <div class="bg-white p-4 md:p-8 rounded-lg shadow-2xl max-w-4xl mx-auto">
+      <h1 class="text-2xl md:text-3xl font-bold mb-6 text-center text-gray-800">
+        ElevenLabs TTS Demo
+      </h1>
+
+      <!-- API Key Management Toggle -->
+      <div class="mb-6">
+        <button
+          id="toggleApiKeyManagement"
+          class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300 flex items-center justify-center"
+        >
+          <i class="fas fa-key mr-2"></i>
+          <span id="toggleApiKeyText">Show API Key Management</span>
+        </button>
+      </div>
+
+      <!-- API Key Management -->
+      <div id="apiKeyManagement" class="mb-6 hidden">
+        <h2 class="text-xl font-semibold mb-2 text-gray-800">
+          API Key Management
+        </h2>
+        <div class="flex mb-2">
+          <input
+            type="text"
+            id="apiKeyName"
+            class="flex-grow px-3 py-2 text-gray-700 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+            placeholder="API Key Name"
+          />
+          <input
+            type="password"
+            id="apiKey"
+            class="flex-grow px-3 py-2 text-gray-700 border focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+            placeholder="Enter your API key"
+          />
+          <button
+            id="toggleApiKey"
+            class="bg-blue-500 text-white px-4 py-2 hover:bg-blue-600 transition duration-300"
+          >
+            <i class="fas fa-eye"></i>
+          </button>
+          <button
+            id="addApiKey"
+            class="bg-green-500 text-white px-4 py-2 rounded-r-lg hover:bg-green-600 transition duration-300"
+          >
+            Add
+          </button>
+        </div>
+        <select
+          id="apiKeySelect"
+          class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 mb-2"
+        ></select>
+        <div class="flex justify-between">
+          <button
+            id="deleteApiKey"
+            class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
+          >
+            Delete Selected API Key
+          </button>
+          <button
+            id="editApiKey"
+            class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-300"
+          >
+            Edit Selected API Key
+          </button>
+          <button
+            id="useSelectedApiKey"
+            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+          >
+            Use Selected API Key
+          </button>
+        </div>
+        <div class="mt-4 flex justify-between">
+          <button
+            id="exportApiKeys"
+            class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition duration-300"
+          >
+            Export API Keys
+          </button>
+          <label
+            for="importApiKeys"
+            class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition duration-300 cursor-pointer"
+          >
+            Import API Keys
+          </label>
+          <input type="file" id="importApiKeys" accept=".json" class="hidden" />
+        </div>
+        <p class="text-sm text-blue-500 mt-2">
+          Don't have an API key?
+          <a
+            href="https://elevenlabs.io/app/speech-synthesis"
+            target="_blank"
+            class="underline"
+            >Get it here</a
+          >.
+        </p>
+      </div>
+
+      <!-- Usage Monitoring -->
+      <div id="usageContainer" class="mb-6 hidden">
+        <button
+          id="showUsage"
+          class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300 flex items-center justify-center mb-2"
+        >
+          <i class="fas fa-chart-bar mr-2"></i> Show Usage Details
+        </button>
+        <div id="usageDetails" class="hidden bg-gray-100 p-4 rounded-lg">
+          <h3 class="font-semibold mb-4 text-center">Usage Details</h3>
+          <div class="flex justify-around text-center">
+            <div>
+              <p class="font-bold text-gray-700">Total</p>
+              <p
+                id="totalCharacters"
+                class="text-2xl font-bold text-blue-600"
+              ></p>
+            </div>
+            <div>
+              <p class="font-bold text-gray-700">Remaining</p>
+              <p
+                id="remainingCharacters"
+                class="text-2xl font-bold text-green-600"
+              ></p>
+            </div>
+            <div>
+              <p class="font-bold text-gray-700">Used</p>
+              <p
+                id="usagePercentage"
+                class="text-2xl font-bold text-orange-600"
+              ></p>
+            </div>
+          </div>
+          <div class="mt-4">
+            <div class="bg-gray-200 h-4 rounded-full overflow-hidden">
+              <div
+                id="usageBar"
+                class="bg-blue-500 h-full animate-fill"
+                style="--fill-width: 0%"
+              ></div>
+            </div>
+          </div>
+          <div
+            id="additionalUsageInfo"
+            class="mt-4 text-sm text-gray-600"
+          ></div>
+          <div
+            id="resetCountdown"
+            class="mt-4 text-sm font-bold text-blue-600"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Text Input -->
+      <div class="mb-6">
+        <label for="text" class="block text-sm font-medium text-gray-700 mb-2">
+          Enter text to convert to speech:
+        </label>
+        <textarea
+          id="text"
+          rows="4"
+          class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+          placeholder="Enter your text here..."
+        ></textarea>
+        <div id="textStats" class="mt-2 text-sm text-gray-600"></div>
+      </div>
+
+      <!-- Voice Selection -->
+      <div class="mb-6">
+        <label for="voice" class="block text-sm font-medium text-gray-700 mb-2">
+          Select voice:
+        </label>
+        <select
+          id="voice"
+          class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+        ></select>
+      </div>
+
+      <!-- Voice Preview -->
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Preview voice:
+        </label>
+        <audio id="preview" controls class="w-full"></audio>
+      </div>
+
+      <!-- Convert Button -->
+      <button
+        id="convert"
+        class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2 px-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition duration-300 flex items-center justify-center"
+      >
+        <i class="fas fa-microphone mr-2"></i> Convert to Speech
+      </button>
+
+      <!-- Generated Audio -->
+      <div id="audioContainer" class="mt-6 hidden">
+        <div class="bg-gray-100 p-4 rounded-lg">
+          <h2 class="text-xl font-semibold mb-2 text-gray-800">
+            Generated Audio
+          </h2>
+          <audio id="audio" controls class="w-full mb-4"></audio>
+          <button
+            id="download"
+            class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300 flex items-center justify-center"
+          >
+            <i class="fas fa-download mr-2"></i> Download Audio
+          </button>
+          <button
+            id="saveToHistory"
+            class="w-full mt-2 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300 flex items-center justify-center"
+          >
+            <i class="fas fa-history mr-2"></i> Save to History
+          </button>
+        </div>
+      </div>
+
+      <!-- History -->
+      <div id="historyContainer" class="mt-6">
+        <div class="flex justify-between items-center mb-2">
+          <h2 class="text-xl font-semibold text-gray-800">History</h2>
+          <button
+            id="clearHistory"
+            class="bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600 transition duration-300 text-sm"
+          >
+            Clear History
+          </button>
+        </div>
+        <div id="historyList" class="space-y-2"></div>
+      </div>
+    </div>
+
+    <script src="8-elevenlabs.js"></script>
+  </body>
+</html>
